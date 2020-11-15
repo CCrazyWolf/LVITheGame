@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class PipesCell : MonoBehaviour
 {
-    bool isTouched = false;
+    bool wasTouched = false;
     public bool canModify = true;
 
     public Material mouseOver;
@@ -28,17 +28,17 @@ public class PipesCell : MonoBehaviour
             return;
 
 
-        if (!isTouched)
+        if (!wasTouched)
         {
             if (objectInCell == null)
             {
                 rend.material = mouseOver;
-                MapEditor.editorInstance.CreatePipe(this);
+                PipesMapEditor.editorInstance.CreatePipe(this);
                 objectInCell.SetPreLook();
             }
             else
             {
-                objectInCell.RotationAngle = MapEditor.editorInstance.RotationAngle;
+                objectInCell.RotationAngle = PipesMapEditor.editorInstance.RotationAngle;
             }
         }
         else
@@ -47,12 +47,12 @@ public class PipesCell : MonoBehaviour
             if (wheel > 0f)
             {
                 objectInCell.RotationAngle += 90;
-                MapEditor.editorInstance.RotationAngle -= 90f;
+                PipesMapEditor.editorInstance.RotationAngle -= 90f;
             }
             else if (wheel < 0f)
             {
                 objectInCell.RotationAngle -= 90;
-                MapEditor.editorInstance.RotationAngle += 90f;
+                PipesMapEditor.editorInstance.RotationAngle += 90f;
             }
             if (Input.GetMouseButtonDown(1))
             {
@@ -67,7 +67,7 @@ public class PipesCell : MonoBehaviour
             return;
 
 
-        if (!isTouched)
+        if (!wasTouched)
         {
             rend.material = defaultM;
             DestroyObject();
@@ -79,21 +79,25 @@ public class PipesCell : MonoBehaviour
             return;
 
 
-        if (!isTouched)
+        if (!wasTouched)
         {
-            isTouched = true;
+            wasTouched = true;
             if (objectInCell==null)
             {
                 rend.material = mouseOver;
-                MapEditor.editorInstance.CreatePipe(this);
+                PipesMapEditor.editorInstance.CreatePipe(this);
             }
             objectInCell.SetPreLook(false);
+        }
+        else
+        {
+            
         }
     }
 
     public void DestroyObject()
     {
-        isTouched = false;
+        wasTouched = false;
         Destroy(objectInCell.gameObject);
     }
 

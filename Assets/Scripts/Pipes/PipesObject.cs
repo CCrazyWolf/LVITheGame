@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class PipesObject : MonoBehaviour
 {
+    public PipesCell cell;
+
     public bool canRotate;          // Object can be rotated
     public bool isRotating =false;  // Object is rotating in Oy axis
     public bool preLook = true;     // Object is not set into cell yet, has transparent material
@@ -15,16 +17,13 @@ public class PipesObject : MonoBehaviour
     private float rotationAngle = 0f;
     public float RotationAngle
     {
-        get
-        {
-            return rotationAngle;
-        }
+        get { return rotationAngle; }
         set
         {
-            if (!canRotate)
+            if (!canRotate || rotationAngle == value)
                 return;
-            isRotating = true;
             rotationAngle = value;
+            isRotating = true;
         }
     }
 
@@ -39,17 +38,17 @@ public class PipesObject : MonoBehaviour
             Debug.LogError("Object is without in/out direction.");
     }
 
-    private void Update()
+    protected virtual void Update()
     {
         if (isRotating)
         {
-            if (Mathf.Abs(RotationAngle - transform.eulerAngles.y) > 0.001f)
+            if (Mathf.Abs(rotationAngle - transform.eulerAngles.y) > 0.001f)
             {
                 this.transform.rotation = Quaternion.Lerp(this.transform.rotation, Quaternion.Euler(0f, rotationAngle, 0f), 0.5f);                
             }
             else
             {
-                transform.rotation = Quaternion.Euler(0f, RotationAngle, 0f);
+                transform.rotation = Quaternion.Euler(0f, rotationAngle, 0f);
                 isRotating = false;
             }
         }

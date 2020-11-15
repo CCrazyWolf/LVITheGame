@@ -10,18 +10,10 @@ using UnityEngine;
 /// </summary>
 public class PipeSource : PipesObject
 {
-    public bool streamSourse; // That helps to invert stream's direction
+    public bool streamSource; // That helps to invert stream's direction
 
-    public List<PipeSource> pipeSpots; // One or more spots, where pipe ends
-
-    private void Update()
+    protected override void Update()
     {
-        if (pipeSpots.Count == 0)
-            Debug.LogWarning(this.name+" Not connected");
-    }
-
-    public void AddSpot(PipeSource spot)
-    {
-        pipeSpots.Add(spot);
+        base.Update();
     }
 }
