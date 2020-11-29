@@ -136,11 +136,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f5bc9a892d501904a9cb67a097bc4084, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  Touched:
+    m_PersistentCalls:
+      m_Calls: []
+  canModify: 1
   mouseOver: {fileID: 2100000, guid: 7967abb1dab6ef94086fbec64793ee74, type: 2}
   defaultM: {fileID: 2100000, guid: 25435308fd738804eb3a38fdb38e2398, type: 2}
   objectInCell: {fileID: 0}
-  neighbors:
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}

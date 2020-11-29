@@ -3,29 +3,29 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace LVITHeGame.Pipes
+namespace LVITHeGame.MapEditor
 {
     public enum MapEditorMode
     {
         building, connecting, deleting
     }
 
-    public class PipesMapEditor : MonoBehaviour
+    public class MapEditor : MonoBehaviour
     {
-        public static PipesMapEditor editorInstance;
+        public static MapEditor editorInstance;
 
         public Image image;
-        public PipesGrid grid;
+        public MapGrid grid;
 
-        public PipesObject[] pipes;
+        public MapObject[] pipes;
 
         public int activePipe = -1;
-        public PipesObject ActivePipe
+        public MapObject ActivePipe
         {
             get { return pipes[activePipe]; }
         }
 
-        public PipesObject obj = null;
+        public MapObject obj = null;
 
         private float rotationAngle;
         public float RotationAngle
@@ -88,17 +88,13 @@ namespace LVITHeGame.Pipes
             switch (currentMode)
             {
                 case MapEditorMode.building:
-                    foreach (PipesCell cell in grid.cells)
+                    foreach (Cell cell in grid.cells)
                     {
-                        if (cell.objectInCell != null)
-                            cell.objectInCell.SetPreLook(false);
                     }
                     break;
                 case MapEditorMode.connecting:
-                    foreach (PipesCell cell in grid.cells)
+                    foreach (Cell cell in grid.cells)
                     {
-                        if (cell.objectInCell != null && cell.objectInCell.GetComponent<PipeSource>() == null)
-                            cell.objectInCell.SetPreLook();
                     }
                     break;
                 case MapEditorMode.deleting:
@@ -108,7 +104,7 @@ namespace LVITHeGame.Pipes
             }
         }
 
-        // Set PipesObject to be created in chosen cell
+        // Set MapObject to be created in chosen cell
         public void SetActivePipe(int value)
         {
 
@@ -131,13 +127,13 @@ namespace LVITHeGame.Pipes
             obj.transform.position = new Vector3(0, 100f, 0);
         }
 
-        public void putPipe(PipesCell cell)
+        public void putPipe(Cell cell)
         {
             obj.transform.position = cell.transform.position;
         }
 
-        // Creating PipesObject in cell
-        public void CreatePipe(PipesCell cell)
+        // Creating MapObject in cell
+        public void CreatePipe(Cell cell)
         {
             obj.transform.SetParent(cell.transform, false);
             obj.transform.localPosition = Vector3.zero;

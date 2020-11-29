@@ -2,20 +2,14 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace LVITHeGame.Pipes
+namespace LVITHeGame.MapEditor
 {
-    public class PipesObject : MonoBehaviour
+    public class MapObject : MonoBehaviour
     {
-        public PipesCell cell;
+        public Cell cell;
 
         public bool canRotate;          // Object can be rotated
         public bool isRotating = false;  // Object is rotating in Oy axis
-        public bool preLook = true;     // Object is not set into cell yet, has transparent material
-
-        public bool hop => preLook && isRotating;
-
-        public Material pipeM;
-        public Material pipeMT;
 
 
         private float rotationAngle = 0f;
@@ -31,9 +25,8 @@ namespace LVITHeGame.Pipes
             }
         }
 
-        // here should be directions for object
-        public PipesDirection[] incomingDirections;
-        public PipesDirection[] outgoingDirections;
+        public QubeDirections[] incomingDirections;
+        public QubeDirections[] outgoingDirections;
 
 
         private void Awake()
@@ -55,19 +48,6 @@ namespace LVITHeGame.Pipes
                     transform.rotation = Quaternion.Euler(0f, rotationAngle, 0f);
                     isRotating = false;
                 }
-            }
-        }
-
-
-        public void SetPreLook(bool value = true)
-        {
-            preLook = value;
-            foreach (Renderer r in GetComponentsInChildren<Renderer>())
-            {
-                if (value)
-                    r.material = pipeMT;
-                else
-                    r.material = pipeM;
             }
         }
     }

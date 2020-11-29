@@ -2,7 +2,9 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PipesStream : MonoBehaviour
+namespace LVITHeGame.Pipes
+{
+    public class PipesStream : MonoBehaviour
 {
     public List<PipeSource> sources;
     public List<PipeSource> drains;
@@ -38,4 +40,5 @@ public class PipesStream : MonoBehaviour
 
         return false;
     }
+}
 }

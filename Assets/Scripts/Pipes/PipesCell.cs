@@ -1,114 +1,111 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 
-public class PipesCell : MonoBehaviour
+namespace LVITHeGame.Pipes
 {
-    bool wasTouched = false;
-    public bool canModify = true;
-
-    public Material mouseOver;
-    public Material defaultM;
-
-    Renderer rend;
-
-    public PipesObject objectInCell = null;
-
-    private PipesCell[] neighbors;
-
-    private void Awake()
+    public class PipesCell : MonoBehaviour
     {
-        neighbors = new PipesCell[4];
-        rend = GetComponentInChildren<Renderer>();
-    }
+        bool wasTouched = false;
+        public bool canModify = true;
 
-    private void OnMouseOver()
-    {
-        if (!canModify)
-            return;
+        public Material mouseOver;
+        public Material defaultM;
 
+        Renderer rend;
 
-        if (!wasTouched)
+        public PipesObject objectInCell = null;
+
+        private PipesCell[] neighbors;
+
+        private void Awake()
         {
-            if (objectInCell == null)
+            neighbors = new PipesCell[4];
+            rend = GetComponentInChildren<Renderer>();
+        }
+
+        private void OnMouseOver()
+        {
+            if (!canModify)
+                return;
+
+
+            if (!wasTouched)
             {
-                rend.material = mouseOver;
-                PipesMapEditor.editorInstance.CreatePipe(this);
-                objectInCell.SetPreLook();
+                if (objectInCell == null)
+                {
+                    rend.material = mouseOver;
+                    PipesMapEditor.editorInstance.putPipe(this);
+                }
             }
             else
             {
-                objectInCell.RotationAngle = PipesMapEditor.editorInstance.RotationAngle;
+                float wheel = Input.GetAxis("Mouse ScrollWheel");
+                if (wheel > 0f)
+                {
+                    objectInCell.RotationAngle += 90;
+                    PipesMapEditor.editorInstance.RotationAngle -= 90f;
+                }
+                else if (wheel < 0f)
+                {
+                    objectInCell.RotationAngle -= 90;
+                    PipesMapEditor.editorInstance.RotationAngle += 90f;
+                }
+                if (Input.GetMouseButtonDown(1))
+                {
+                    DestroyObject();
+                }
             }
         }
-        else
+
+        private void OnMouseExit()
         {
-            float wheel = Input.GetAxis("Mouse ScrollWheel");
-            if (wheel > 0f)
+            if (!canModify)
+                return;
+
+
+            if (!wasTouched)
             {
-                objectInCell.RotationAngle += 90;
-                PipesMapEditor.editorInstance.RotationAngle -= 90f;
-            }
-            else if (wheel < 0f)
-            {
-                objectInCell.RotationAngle -= 90;
-                PipesMapEditor.editorInstance.RotationAngle += 90f;
-            }
-            if (Input.GetMouseButtonDown(1))
-            {
-                DestroyObject();
+                rend.material = defaultM;
             }
         }
-    }
-
-    private void OnMouseExit()
-    {
-        if (!canModify)
-            return;
-
-
-        if (!wasTouched)
+        private void OnMouseDown()
         {
-            rend.material = defaultM;
-            DestroyObject();
-        }
-    }
-    private void OnMouseDown()
-    {
-        if (!canModify)
-            return;
+            if (!canModify)
+                return;
 
-
-        if (!wasTouched)
-        {
-            wasTouched = true;
-            if (objectInCell==null)
+            if (!wasTouched)
             {
-                rend.material = mouseOver;
-                PipesMapEditor.editorInstance.CreatePipe(this);
+                wasTouched = true;
+                if (objectInCell == null)
+                {
+                    rend.material = mouseOver;
+                    PipesMapEditor.editorInstance.CreatePipe(this);
+                }
+                objectInCell.SetPreLook(false);
             }
-            objectInCell.SetPreLook(false);
+            else
+            {
+
+            }
         }
-        else
+
+        public void DestroyObject()
         {
-            
+            wasTouched = false;
+            Destroy(objectInCell.gameObject);
         }
-    }
 
-    public void DestroyObject()
-    {
-        wasTouched = false;
-        Destroy(objectInCell.gameObject);
-    }
+        public void SetNeighbor(PipesCell other, PipesDirection direction)
+        {
+            neighbors[(int)direction] = other;
+            other.neighbors[(int)direction.Opposite()] = this;
+        }
 
-    public void SetNeighbor(PipesCell other, PipesDirection direction)
-    {
-        neighbors[(int)direction] = other;
-        other.neighbors[(int)direction.Opposite()] = this;
-    }
-
-    public PipesCell GetNeighbor(PipesDirection direction)
-    {
-        return neighbors[(int)direction];
+        public PipesCell GetNeighbor(PipesDirection direction)
+        {
+            return neighbors[(int)direction];
+        }
     }
 }
