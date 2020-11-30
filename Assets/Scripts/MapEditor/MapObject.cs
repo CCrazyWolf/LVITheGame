@@ -9,7 +9,7 @@ namespace LVITHeGame.MapEditor
         public Cell cell;
 
         public bool canRotate;          // Object can be rotated
-        public bool isRotating = false;  // Object is rotating in Oy axis
+        public bool isRotating = false; // Object is rotating in Oy axis
 
 
         private float rotationAngle = 0f;

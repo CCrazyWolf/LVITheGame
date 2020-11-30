@@ -28,16 +28,6 @@ public class MapMesh : MonoBehaviour
         }
     }
 
-    public Vector3? MouseOver()
-    {
-        RaycastHit hit;
-        if (colli.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out hit, 100f))
-        {
-            return hit.point;
-        }
-        return null;
-    }
-
     public void Clear()
     {
         mesh.Clear();

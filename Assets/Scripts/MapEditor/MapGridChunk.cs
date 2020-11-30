@@ -12,15 +12,6 @@ namespace LVITHeGame.MapEditor
 
         private bool needRefresh = true;
 
-        private void Update()
-        {
-            Vector3? pos = mesh.MouseOver();
-            if (pos != null)
-            {
-                Cell cell = MapGrid.instance.GetCellFromPosition((Vector3)pos);
-            }
-        }
-
         private void LateUpdate()
         {
             if (needRefresh)

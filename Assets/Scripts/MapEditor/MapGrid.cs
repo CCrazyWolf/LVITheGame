@@ -11,11 +11,11 @@ namespace LVITHeGame.MapEditor
         int cellCountX = 10;
         int cellCountZ= 6;
 
-        int xChunk = 2;
-        int zChunk = 2;
+        int chunkCountX = 2;
+        int chunkCountZ = 2;
 
-        int xSize => cellCountX / xChunk;
-        int zSize => cellCountZ / zChunk;
+        int xSize => cellCountX / chunkCountX;
+        int zSize => cellCountZ / chunkCountZ;
 
 
         public Cell cellPrefab;
@@ -28,24 +28,36 @@ namespace LVITHeGame.MapEditor
         {
             instance = this;
 
-            chunks = new MapGridChunk[xChunk * zChunk];
-            for (int i = 0; i < chunks.Length; i++)
+            CreateChunks();
+            CreateCells();            
+        }
+
+        void CreateChunks()
+        {
+            chunks = new MapGridChunk[chunkCountX * chunkCountZ];
+            for (int z = 0, i=0; z < chunkCountZ; z++)
             {
-                chunks[i] = Instantiate(chunkPrefab);
-                chunks[i].cells = new Cell[xSize * zSize];
+                for (int x = 0; x < chunkCountX; x++, i++)
+                {
+                    MapGridChunk chunk = chunks[i] = Instantiate(chunkPrefab);
+                    chunk.cells = new Cell[xSize * zSize];
+                    chunk.transform.SetParent(this.transform, false);
+                }
             }
+        }
 
-
+        void CreateCells()
+        {
             cells = new Cell[cellCountX * cellCountZ];
 
             for (int z = 0, i = 0; z < cellCountZ; z++)
             {
                 for (int x = 0; x < cellCountX; x++, i++)
                 {
-                    Cell cell = Instantiate(cellPrefab);
-                    cell.transform.position = new Vector3(x * 2f, 0f, z * 2f);
-                    cells[i] = cell;
+                    Cell cell = cells[i] = Instantiate(cellPrefab);
+                    cell.transform.position = new Vector3(x * MapMetrics.cellLength, 0f, z * MapMetrics.cellLength);
 
+                    // Setting up Neighbors
                     if (x > 0)
                     {
                         cell.SetNeighbor(cells[i - 1], QubeDirections.W);
@@ -55,9 +67,10 @@ namespace LVITHeGame.MapEditor
                         cell.SetNeighbor(cells[i - xSize], QubeDirections.S);
                     }
 
-                    int chunkZ = z / zSize;
+                    // Setting up Chunk
                     int chunkX = x / xSize;
-                    int chunkI = chunkZ * xChunk + chunkX;
+                    int chunkZ = z / zSize;
+                    int chunkI = chunkZ * chunkCountX + chunkX;
 
                     int xInChunk = x % xSize;
                     int zInChunk = z % zSize;
@@ -68,10 +81,6 @@ namespace LVITHeGame.MapEditor
             }
         }
 
-        public Cell GetCell(int x, int z)
-        {
-            return cells[z * cellCountX + x];
-        }
         public Cell GetCellFromPosition(Vector3 position)
         {
             float z = position.z / MapMetrics.cellLength;
@@ -80,7 +89,7 @@ namespace LVITHeGame.MapEditor
             int X = Mathf.RoundToInt(x);
             int Z = Mathf.RoundToInt(z);
 
-            return null;
+            return cells[Z*cellCountX + X];
         }
     }
 }
